@@ -49,11 +49,16 @@ class InstanceGenerator(object):
             S.append([0]*m)
             aux_s = []
 
+            inserted = False
             for n_items in range(1, n):
-                for m_items in range(m):
-                    aux_s.append(random.randint(0, 1))
-                S.append(aux_s)
-                aux_s = []
+                while not inserted:
+                    for m_items in range(m):
+                        aux_s.append(random.randint(0, 1))
+                    if aux_s not in S:
+                        S.append(aux_s)
+                        inserted = True
+                    aux_s = []
+                inserted = False
 
             fInstance.write('n=%d;\n' % n)
             fInstance.write('m=%d;\n' % m)
