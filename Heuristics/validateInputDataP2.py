@@ -61,5 +61,3 @@ class ValidateInputData(object):
                 if not isinstance(element, int) or (element < 0) or (element > 1):
                     raise AMMMException(
                         'Invalid parameter value(%s) in S. Should be an integer equal to 0 or 1.' % str(element))
-
-        print("DONE")
