@@ -39,17 +39,6 @@ class Instance(object):
                         if self.S[i][j] != self.S[k][j]:
                             self.F[i][k] += 1
 
-        print("Hello")
-        """self.tasks = [None] * nTasks  # vector with tasks
-        for N0 in range(0, n-1):
-            pass
-        for tId in range(0, nTasks):  # tId = 0..(nTasks-1)
-            self.tasks[tId] = Task(tId, rt[tId])
-
-        self.cpus = [None] * nCPUs  # vector with cpus
-        for cId in range(0, nCPUs):  # cId = 0..(nCPUs-1)
-            self.cpus[cId] = CPU(cId, self.rc[cId])
-"""
     def getNumCodes(self):
         return len(self.numCodes)
 
