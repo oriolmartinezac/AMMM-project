@@ -1,8 +1,0 @@
-# file name: ../AMMMLabHeuristics/data/instance_XX.dat
-instancesDirectory = output;
-fileNamePrefix = project;
-fileNameExtension = dat;
-numInstances = 5;
-
-n = 5;
-m = 4;
