@@ -26,24 +26,29 @@ class Instance(object):
     def __init__(self, config, inputData):
         self.config = config
         self.inputData = inputData
-        nTasks = inputData.n
-        nCPUs = inputData.m
-        rt = inputData.rt
-        self.rc = inputData.rc
+        self.numCodes = inputData.n
+        self.numElementsCodes = inputData.m
+        self.S = inputData.S
 
-        self.tasks = [None] * nTasks  # vector with tasks
+        # Distance matrix
+        self.F = [[0 for _ in range(self.numCodes)] for _ in range(self.numCodes)]
+
+        print("Hello")
+        """self.tasks = [None] * nTasks  # vector with tasks
+        for N0 in range(0, n-1):
+            pass
         for tId in range(0, nTasks):  # tId = 0..(nTasks-1)
             self.tasks[tId] = Task(tId, rt[tId])
 
         self.cpus = [None] * nCPUs  # vector with cpus
         for cId in range(0, nCPUs):  # cId = 0..(nCPUs-1)
             self.cpus[cId] = CPU(cId, self.rc[cId])
+"""
+    def getNumCodes(self):
+        return len(self.n)
 
-    def getNumTasks(self):
-        return len(self.tasks)
-
-    def getNumCPUs(self):
-        return len(self.cpus)
+    def getNumElementsCodes(self):
+        return len(self.m)
 
     def getTasks(self):
         return self.tasks
