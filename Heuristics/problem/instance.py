@@ -33,6 +33,14 @@ class Instance(object):
         # Distance matrix
         self.F = [[0 for _ in range(self.numCodes)] for _ in range(self.numCodes)]
 
+        for i in range(self.numCodes):
+            for j in range(self.numElementsCodes):
+                for k in range(self.numCodes):
+                    if i != k:
+                        if self.S[i][j] != self.S[k][j]:
+                            self.F[i][k] += 1
+        print(self.F)
+
         print("Hello")
         """self.tasks = [None] * nTasks  # vector with tasks
         for N0 in range(0, n-1):

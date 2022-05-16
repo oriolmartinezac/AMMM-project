@@ -93,7 +93,7 @@ class DATParser(object):
             for entry2 in entries2:
                 pattern2 = re.compile(r'([\w\/\.\-]+)[\s]*')
                 values2 = pattern2.findall(entry2[0])
-                values.append(map(DATParser._tryParse, values2))
+                values.append(list(map(DATParser._tryParse, values2)))
             datAttr.__dict__[entry[0]] = values
 
         return datAttr

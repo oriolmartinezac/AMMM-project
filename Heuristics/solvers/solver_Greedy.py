@@ -49,7 +49,7 @@ class Solver_Greedy(_Solver):
             # compute feasible assignments
             candidateList = solution.findFeasibleAssignments(taskId)
 
-            # no candidate assignments => no feasible assignment found
+            # no candidate assi ,gnments => no feasible assignment found
             if not candidateList:
                 solution.makeInfeasible()
                 break
