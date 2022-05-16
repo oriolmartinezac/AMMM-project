@@ -39,7 +39,6 @@ class Instance(object):
                     if i != k:
                         if self.S[i][j] != self.S[k][j]:
                             self.F[i][k] += 1
-        print(self.F)
 
         print("Hello")
         """self.tasks = [None] * nTasks  # vector with tasks
@@ -58,29 +57,19 @@ class Instance(object):
     def getNumElementsCodes(self):
         return len(self.m)
 
-    def getTasks(self):
-        return self.tasks
+    def getS(self):
+        return self.S
 
-    def getCPUs(self):
-        return self.cpus
+    def getF(self):
+        return self.F
+
+    def getCode(self, idx):
+        return self.S[idx]
 
     def createSolution(self):
-        solution = Solution(self.tasks, self.cpus, self.rc)
+        solution = Solution(self.S, self.F)
         solution.setVerbose(self.config.verbose)
         return solution
 
     def checkInstance(self):
-        totalCapacityCPUs = 0.0
-        maxCPUCapacity = 0.0
-        for cpu in self.cpus:
-            capacity = cpu.getTotalCapacity()
-            totalCapacityCPUs += capacity
-            maxCPUCapacity = max(maxCPUCapacity, capacity)
-
-        totalResourcesTasks = 0.0
-        for task in self.tasks:
-            resources = task.getTotalResources()
-            totalResourcesTasks += resources
-            if resources > maxCPUCapacity: return False
-
-        return totalCapacityCPUs >= totalResourcesTasks
+        return True
