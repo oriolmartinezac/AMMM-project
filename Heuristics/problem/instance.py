@@ -30,7 +30,7 @@ class Instance(object):
         self.S = inputData.S
 
         # Distance matrix
-        self.F = [[0] * self.numElementsCodes for i in range(self.numCodes)]
+        self.F = [[0] * self.numCodes for i in range(self.numCodes)]
 
         for i in range(self.numCodes):
             for j in range(self.numElementsCodes):
