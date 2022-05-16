@@ -1,5 +1,5 @@
 '''
-AMMM P3 Instance Generator v2.0
+AMMM P2 Instance Generator v2.0
 Main function.
 Copyright 2020 Luis Velasco.
 
@@ -19,13 +19,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
 from Heuristics.datParser import DATParser
-from InstanceGeneratorP3.ValidateConfig import ValidateConfig
-from InstanceGeneratorP3.InstanceGenerator import InstanceGenerator
 from AMMMGlobals import AMMMException
+from InstanceGenerator.ValidateConfig import ValidateConfig
+from InstanceGenerator.InstanceGenerator import InstanceGenerator
 
 def run():
     try:
-        configFile = "config\config.dat"
+        configFile = "config/config.dat"
         print("AMMM Instance Generator")
         print("-----------------------")
         print("Reading Config file %s..." % configFile)
