@@ -21,7 +21,6 @@ from Heuristics.problem.Task import Task
 from Heuristics.problem.CPU import CPU
 from Heuristics.problem.solution import Solution
 
-
 class Instance(object):
     def __init__(self, config, inputData):
         self.config = config
