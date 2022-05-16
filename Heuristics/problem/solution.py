@@ -128,7 +128,8 @@ class Solution(_Solution):
 
     def __str__(self):
         strSolution = 'z = %10.8f;\n' % self.fitness
-        if self.fitness == float('inf'): return strSolution
+        if self.fitness == float('inf'):
+            return strSolution
 
         # Xtc: decision variable containing the assignment of tasks to CPUs
         # pre-fill with no assignments (all-zeros)
@@ -148,6 +149,12 @@ class Solution(_Solution):
                 strSolution += str(xtcValue) + ' '
             strSolution += ']\n'
         strSolution += '];\n'
+
+
+        # OBJECTIVE FUNCTION SOLUTION
+
+
+        #PATH
 
         return strSolution
 

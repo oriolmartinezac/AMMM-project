@@ -51,10 +51,10 @@ class Instance(object):
             self.cpus[cId] = CPU(cId, self.rc[cId])
 """
     def getNumCodes(self):
-        return len(self.n)
+        return len(self.numCodes)
 
     def getNumElementsCodes(self):
-        return len(self.m)
+        return len(self.numElementsCodes)
 
     def getS(self):
         return self.S
