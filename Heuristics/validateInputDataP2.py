@@ -41,12 +41,25 @@ class ValidateInputData(object):
             raise AMMMException('m(%s), length of the codes, has to be a positive integer value.' % str(m))
 
         # Validate S
-        data.n_val = list(data.S)
-        n_val = data.n_val
-        if len(n_val) != n:
-            raise AMMMException('Size of (%d) does not match with value of nTasks(%d).' % (len(n_val), n))
+        numberCodes = len(data.S)
+        if n != numberCodes:
+            raise AMMMException(
+                'The number of codes in S is not equal to the value of n(%d)' % n)
 
-        for value in n_val:
-            if value > 1 or value < 0:
-                raise AMMMException(
-                    'Invalid parameter value(%s) in S. Should be an int equal to 0 or 1.' % str(value))
+        count = 0
+        total_elements = n * m
+        for row in data.S:
+            for element in row:
+                count += 1
+
+        if total_elements != count:
+            raise AMMMException(
+                    'The number of total elements in S, codes,  is not equal to the value of n(%) * m(%d)' % (n, m))
+
+        for value in data.S:
+            for element in value:
+                if not isinstance(element, int) or (element < 0) or (element > 1):
+                    raise AMMMException(
+                        'Invalid parameter value(%s) in S. Should be an integer equal to 0 or 1.' % str(element))
+
+        print("DONE")

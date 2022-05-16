@@ -64,13 +64,12 @@ class InstanceGenerator(object):
             fInstance.write('m=%d;\n' % m)
 
             # translate vector of floats into vector of strings and concatenate that strings separating them by a single space character
-            fInstance.write('S=[')
-            for element in S:
-                if element == S[-1]:
-                    fInstance.write('[%s]' % (' '.join(map(str, element))))
-                else:
-                    fInstance.write('[%s]\n' % (' '.join(map(str, element))))
-
-            fInstance.write("];")
+            fInstance.write('S=\n[\n')
+            for row in S:
+                fInstance.write("  [")
+                for column in row:
+                    fInstance.write(' %d' % column)
+                fInstance.write(" ]\n")
+            fInstance.write("];\n")
 
             fInstance.close()

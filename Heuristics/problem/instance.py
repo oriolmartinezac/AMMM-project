@@ -26,8 +26,8 @@ class Instance(object):
     def __init__(self, config, inputData):
         self.config = config
         self.inputData = inputData
-        nTasks = inputData.nTasks
-        nCPUs = inputData.nCPUs
+        nTasks = inputData.n
+        nCPUs = inputData.m
         rt = inputData.rt
         self.rc = inputData.rc
 
