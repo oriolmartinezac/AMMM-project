@@ -1,4 +1,4 @@
-# file name: ../AMMMLabHeuristics/data/instance_XX.dat
+# file name: ..\Heuristics\data\instance_XX.dat
 instancesDirectory = output;
 fileNamePrefix = project;
 fileNameExtension = dat;
