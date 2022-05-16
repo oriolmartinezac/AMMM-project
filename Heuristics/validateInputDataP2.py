@@ -28,37 +28,25 @@ class ValidateInputData(object):
     @staticmethod
     def validate(data):
         # Validate that all input parameters were found
-        for paramName in ['nTasks', 'nCPUs', 'rt', 'rc']:
+        for paramName in ['n', 'm', 'S']:
             if paramName not in data.__dict__:
                 raise AMMMException('Parameter/Set(%s) not contained in Input Data' % str(paramName))
 
-        # Validate nTasks
-        nTasks = data.nTasks
-        if not isinstance(nTasks, int) or (nTasks <= 0):
-            raise AMMMException('nTasks(%s) has to be a positive integer value.' % str(nTasks))
+        n = data.n
+        if not isinstance(n, int) or (n <= 0):
+            raise AMMMException('n(%s), number of codes, has to be a positive integer value.' % str(n))
 
-        # Validate nCPUs
-        nCPUs = data.nCPUs
-        if not isinstance(nCPUs, int) or (nCPUs <= 0):
-            raise AMMMException('nCPUs(%s) has to be a positive integer value.' % str(nCPUs))
+        m = data.m
+        if not isinstance(m, int) or (m <= 0):
+            raise AMMMException('m(%s), length of the codes, has to be a positive integer value.' % str(m))
 
-        # Validate rt
-        data.rt = list(data.rt)
-        rt = data.rt
-        if len(rt) != nTasks:
-            raise AMMMException('Size of rt(%d) does not match with value of nTasks(%d).' % (len(rt), nTasks))
+        # Validate S
+        data.n_val = list(data.S)
+        n_val = data.n_val
+        if len(n_val) != n:
+            raise AMMMException('Size of (%d) does not match with value of nTasks(%d).' % (len(n_val), n))
 
-        for value in rt:
-            if not isinstance(value, (int, float)) or (value < 0):
-                raise AMMMException('Invalid parameter value(%s) in rt. Should be a float greater or equal than zero.' % str(value))
-
-        # Validate rc
-        data.rc = list(data.rc)
-        rc = data.rc
-        if len(rc) != nCPUs:
-            raise AMMMException('Size of rc(%d) does not match with value of nCPUs(%d).' % (len(rc), nCPUs))
-
-        for value in rc:
-            if not isinstance(value, (int, float)) or (value < 0):
-                raise AMMMException('Invalid parameter value(%s) in rc. Should be a float greater or equal than zero.' % str(value))
-
+        for value in n_val:
+            if value > 1 or value < 0:
+                raise AMMMException(
+                    'Invalid parameter value(%s) in S. Should be an int equal to 0 or 1.' % str(value))
