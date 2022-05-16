@@ -36,15 +36,9 @@ class Assignment(object):
 # Solution includes functions to manage the solution, to perform feasibility
 # checks and to dump the solution into a string or file.
 class Solution(_Solution):
-    def __init__(self, tasks, cpus, capacityPerCPUId):
-        self.tasks = tasks
-        self.cpus = cpus
-        self.taskIdToCPUId = {}  # hash table: task Id => CPU Id
-        self.cpuIdToListTaskId = {}  # hash table: CPU Id => list<task Id>
-        # vector of available capacities per CPU initialized as a copy of maxCapacityPerCPUId vector.
-        self.availCapacityPerCPUId = copy.deepcopy(capacityPerCPUId)
-        # vector of loads per CPU (nCPUs entries initialized to 0.0) 
-        self.loadPerCPUId = [0.0] * len(cpus)
+    def __init__(self, S, F):
+        self.S = S
+        self.F = F
         super().__init__()
 
     def updateHighestLoad(self):
