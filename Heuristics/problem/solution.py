@@ -30,7 +30,7 @@ class Assignment(object):
         self.highestLoad = highestLoad
 
     def __str__(self):
-        return "<t_%d, c_%d>: highestLoad: %.2f%%" % (self.taskId, self.cpuId, self.highestLoad*100)
+        return "<t_%d, c_%d>: highestLoad: %.2f%%" % (self.taskId, self.cpuId, self.highestLoad * 100)
 
 
 # Solution includes functions to manage the solution, to perform feasibility
@@ -71,7 +71,7 @@ class Solution(_Solution):
         return self.taskIdToCPUId[taskId]
 
     def assign(self, taskId, cpuId):
-        if not self.isFeasibleToAssignTaskToCPU(taskId, cpuId):return False
+        if not self.isFeasibleToAssignTaskToCPU(taskId, cpuId): return False
 
         self.taskIdToCPUId[taskId] = cpuId
         if cpuId not in self.cpuIdToListTaskId: self.cpuIdToListTaskId[cpuId] = []
@@ -121,6 +121,8 @@ class Solution(_Solution):
         return bestAssignment
 
     def __str__(self):
+        # TODO: strSolution = Solution value
+
         strSolution = 'z = %10.8f;\n' % self.fitness
         if self.fitness == float('inf'):
             return strSolution
@@ -144,11 +146,7 @@ class Solution(_Solution):
             strSolution += ']\n'
         strSolution += '];\n'
 
-
-        # OBJECTIVE FUNCTION SOLUTION
-
-
-        #PATH
+        # TODO: Show the path
 
         return strSolution
 

@@ -2,7 +2,7 @@
 instancesDirectory = output;
 fileNamePrefix = project;
 fileNameExtension = dat;
-numInstances = 5;
+numInstances = 1;
 
-n = 5;
-m = 4;
+n = 1000;
+m = 500;

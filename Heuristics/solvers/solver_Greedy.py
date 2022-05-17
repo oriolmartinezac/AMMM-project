@@ -27,7 +27,7 @@ class Solver_Greedy(_Solver):
 
     def _selectCandidate(self, candidateList):
         if self.config.solver == 'Greedy':
-            # sort candidate assignments by highestLoad in ascending order
+            # sort candidate assignments by  in ascending order
             sortedCandidateList = sorted(candidateList, key=lambda x: x.highestLoad)
             # choose assignment with minimum highest load
             return sortedCandidateList[0]
@@ -39,7 +39,15 @@ class Solver_Greedy(_Solver):
 
         # get tasks and sort them by their total required resources in descending order
         tasks = self.instance.getTasks()
-        sortedTasks = sorted(tasks, key=lambda t: t.getTotalResources(), reverse=True)
+
+        codes = self.instance.getCodes()
+
+        sortedTasks = sorted(codes, key=lambda c: c.get(), reverse=True)
+
+
+
+        for
+
 
 
         # for each task taken in sorted order

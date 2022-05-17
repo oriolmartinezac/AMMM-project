@@ -20,8 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import sys
 from Heuristics.datParser import DATParser
 from AMMMGlobals import AMMMException
-from InstanceGenerator.ValidateConfig import ValidateConfig
-from InstanceGenerator.InstanceGenerator import InstanceGenerator
+from ValidateConfig import ValidateConfig
+from InstanceGenerator import InstanceGenerator
 
 def run():
     try:

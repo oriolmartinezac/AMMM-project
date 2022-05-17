@@ -54,6 +54,9 @@ class Instance(object):
     def getCode(self, idx):
         return self.S[idx]
 
+    def getCodes(self):
+        return self.S
+
     def createSolution(self):
         solution = Solution(self.S, self.F)
         solution.setVerbose(self.config.verbose)
