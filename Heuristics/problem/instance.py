@@ -17,8 +17,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from Heuristics.problem.Task import Task
-from Heuristics.problem.CPU import CPU
 from Heuristics.problem.solution import Solution
 
 class Instance(object):
@@ -40,10 +38,10 @@ class Instance(object):
                             self.F[i][k] += 1
 
     def getNumCodes(self):
-        return len(self.numCodes)
+        return self.numCodes
 
     def getNumElementsCodes(self):
-        return len(self.numElementsCodes)
+        return self.numElementsCodes
 
     def getS(self):
         return self.S

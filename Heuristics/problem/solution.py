@@ -39,114 +39,29 @@ class Solution(_Solution):
     def __init__(self, S, F):
         self.S = S
         self.F = F
+        self.total_flips = 0
+        self.path_followed = []
         super().__init__()
 
-    def updateHighestLoad(self):
-        self.fitness = 0.0
-        for cpu in self.cpus:
-            cpuId = cpu.getId()
-            totalCapacity = cpu.getTotalCapacity()
-            usedCapacity = totalCapacity - self.availCapacityPerCPUId[cpuId]
-            load = usedCapacity / totalCapacity
-            self.loadPerCPUId[cpuId] = load
-            self.fitness = max(self.fitness, load)
-
-    def isFeasibleToAssignTaskToCPU(self, taskId, cpuId):
-        if taskId in self.taskIdToCPUId:
+    def add(self, path, total_flips):
+        try:
+            self.total_flips = total_flips
+            self.path_followed = path
+            return True
+        except:
             return False
-
-        if self.availCapacityPerCPUId[cpuId] < self.tasks[taskId].getTotalResources():
-            return False
-
-        return True
-
-    def isFeasibleToUnassignTaskFromCPU(self, taskId, cpuId):
-        if taskId not in self.taskIdToCPUId: return False
-        if cpuId not in self.cpuIdToListTaskId: return False
-        if taskId not in self.cpuIdToListTaskId[cpuId]: return False
-        return True
-
-    def getCPUIdAssignedToTaskId(self, taskId):
-        if taskId not in self.taskIdToCPUId: return None
-        return self.taskIdToCPUId[taskId]
-
-    def assign(self, taskId, cpuId):
-        if not self.isFeasibleToAssignTaskToCPU(taskId, cpuId): return False
-
-        self.taskIdToCPUId[taskId] = cpuId
-        if cpuId not in self.cpuIdToListTaskId: self.cpuIdToListTaskId[cpuId] = []
-        self.cpuIdToListTaskId[cpuId].append(taskId)
-        self.availCapacityPerCPUId[cpuId] -= self.tasks[taskId].getTotalResources()
-
-        self.updateHighestLoad()
-        return True
-
-    def unassign(self, taskId, cpuId):
-        if not self.isFeasibleToUnassignTaskFromCPU(taskId, cpuId): return False
-
-        del self.taskIdToCPUId[taskId]
-        self.cpuIdToListTaskId[cpuId].remove(taskId)
-        self.availCapacityPerCPUId[cpuId] += self.tasks[taskId].getTotalResources()
-
-        self.updateHighestLoad()
-        return True
-
-    def findFeasibleAssignments(self, taskId):
-        feasibleAssignments = []
-        for cpu in self.cpus:
-            cpuId = cpu.getId()
-            feasible = self.assign(taskId, cpuId)
-            if not feasible: continue
-            assignment = Assignment(taskId, cpuId, self.fitness)
-            feasibleAssignments.append(assignment)
-
-            self.unassign(taskId, cpuId)
-
-        return feasibleAssignments
-
-    def findBestFeasibleAssignment(self, taskId):
-        bestAssignment = Assignment(taskId, None, float('infinity'))
-        for cpu in self.cpus:
-            cpuId = cpu.getId()
-            feasible = self.assign(taskId, cpuId)
-            if not feasible: continue
-
-            curHighestLoad = self.fitness
-            if bestAssignment.highestLoad > curHighestLoad:
-                bestAssignment.cpuId = cpuId
-                bestAssignment.highestLoad = curHighestLoad
-
-            self.unassign(taskId, cpuId)
-
-        return bestAssignment
 
     def __str__(self):
-        # TODO: strSolution = Solution value
 
-        strSolution = 'z = %10.8f;\n' % self.fitness
+        strSolution = 'OBJECTIVE: %d;\n' % self.total_flips
         if self.fitness == float('inf'):
             return strSolution
 
-        # Xtc: decision variable containing the assignment of tasks to CPUs
-        # pre-fill with no assignments (all-zeros)
-        xtc = []
-        for t in range(0, len(self.tasks)):  # t = 0..(nTasks-1)
-            xtcEntry = [0] * len(self.cpus)  # results in a vector of 0's with nCPUs elements
-            xtc.append(xtcEntry)
-
-        # iterate over hash table taskIdToCPUId and fill in xtc
-        for taskId, cpuId in self.taskIdToCPUId.items():
-            xtc[taskId][cpuId] = 1
-
-        strSolution += 'xtc = [\n'
-        for xtcEntry in xtc:
-            strSolution += '\t[ '
-            for xtcValue in xtcEntry:
-                strSolution += str(xtcValue) + ' '
-            strSolution += ']\n'
-        strSolution += '];\n'
-
-        # TODO: Show the path
+        for index, code_index in enumerate(self.path_followed):
+            if index == 0:
+                strSolution += str(code_index)
+            else:
+                strSolution += '-->'+str(code_index)
 
         return strSolution
 

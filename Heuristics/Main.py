@@ -40,9 +40,6 @@ class Main:
     def run(self, data):
         try:
             if self.config.verbose: print('Creating Problem Instance...')
-            print("1")
-            print(data)
-            print("2")
             instance = Instance(self.config, data)
             if self.config.verbose: print('Solving the Problem...')
             if instance.checkInstance():
@@ -62,7 +59,6 @@ class Main:
                 else:
                     raise AMMMException('Solver %s not supported.' % str(self.config.solver))
                 solution = solver.solve(solution=initialSolution)
-                print('Solution (CPUid: [TasksId]): %s' % str(solution.cpuIdToListTaskId))
                 solution.saveToFile(self.config.solutionFile)
             else:
                 print('Instance is infeasible.')
