@@ -61,10 +61,7 @@ class Solver_Greedy(_Solver):
 
         for n in range(self.instance.getNumCodes()):
 
-            index = 0
-
             new_index, value = self._selectCandidate(costCodes[current], path)
-            #new_index = costCodes[current].index(candidate)
 
             total_flips += value
             path.append(new_index)
