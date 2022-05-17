@@ -18,6 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import random, time
+import sys
+
 from Heuristics.solver import _Solver
 from Heuristics.solvers.localSearch import LocalSearch
 
@@ -25,17 +27,19 @@ from Heuristics.solvers.localSearch import LocalSearch
 # Inherits from the parent abstract solver.
 class Solver_Greedy(_Solver):
 
-    def _selectCandidate(self, candidateList, index, path_length):
+    def _selectCandidate(self, candidateList, path):
         if self.config.solver == 'Greedy':
-            sortedCandidateList = sorted(candidateList)
-            # sort candidate assignments by in ascending order
-            checkCandidateList = sortedCandidateList[index + 1:]
-            min_value = min(checkCandidateList)
-            new_index = checkCandidateList.index(min_value) + (index+1)
-            if path_length == self.instance.getNumCodes():
+            max_int = sys.maxsize
+            if len(path) == self.instance.getNumCodes():
                 new_index = 0
                 min_value = candidateList[0]
+            else:
+                for i in path:
+                    candidateList[i] = max_int
 
+                min_value = min(candidateList)
+                # new_index = sortedCandidateList.index(min_value) + (index+1)
+                new_index = candidateList.index(min_value)
             return new_index, min_value  # Return position next node
 
         return random.choice(candidateList)
@@ -58,23 +62,14 @@ class Solver_Greedy(_Solver):
         for n in range(self.instance.getNumCodes()):
 
             index = 0
-            next_candidate = False
-            while not next_candidate:
-                new_index, value = self._selectCandidate(costCodes[current], index, len(path))
-                #new_index = costCodes[current].index(candidate)
 
-                if new_index not in path:
-                    total_flips += value
-                    path.append(new_index)
-                    current = new_index
-                    next_candidate = True
-                elif len(path) == self.instance.getNumCodes():
-                    new_index, value = self._selectCandidate(costCodes[current], index, len(path))
-                    total_flips += value
-                    path.append(new_index)
-                    next_candidate = True
-                else:
-                    index += 1
+            new_index, value = self._selectCandidate(costCodes[current], path)
+            #new_index = costCodes[current].index(candidate)
+
+            total_flips += value
+            path.append(new_index)
+            current = new_index
+
         solution.add(path, total_flips)
 
         return solution
