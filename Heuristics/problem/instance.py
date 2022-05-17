@@ -18,8 +18,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from Heuristics.problem.solution import Solution
+import numpy as np
 
 class Instance(object):
+    def calculateCostFunction(self, i, j):
+        total = 0
+        for i_e in range(self.numElementsCodes):
+            if self.S[i][i_e] != self.S[j][i_e]:
+                total += 1
+        return total
+
     def __init__(self, config, inputData):
         self.config = config
         self.inputData = inputData
@@ -28,15 +36,25 @@ class Instance(object):
         self.S = inputData.S
 
         # Distance matrix
-        self.F = [[0] * self.numCodes for i in range(self.numCodes)]
+        # self.F = [[0] * self.numCodes for i in range(self.numCodes)]
+        self.F = np.zeros((int(self.numCodes), int(self.numCodes))).astype(int)
 
         for i in range(self.numCodes):
+            for j in range(i+1, self.numCodes):
+                self.F[i][j] = self.calculateCostFunction(i, j)
+
+        self.F = self.F + self.F.T - np.diag(np.diag(self.F))
+        self.F = self.F.tolist()
+        patata = 0
+        """for i in range(self.numCodes):
             for j in range(self.numElementsCodes):
                 for k in range(self.numCodes):
+                    k += 1
                     if i != k:
+
                         if self.S[i][j] != self.S[k][j]:
                             self.F[i][k] += 1
-
+        """
     def getNumCodes(self):
         return self.numCodes
 
