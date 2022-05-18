@@ -36,25 +36,20 @@ class Instance(object):
         self.S = inputData.S
 
         # Distance matrix
-        # self.F = [[0] * self.numCodes for i in range(self.numCodes)]
         self.F = np.zeros((int(self.numCodes), int(self.numCodes))).astype(int)
 
-        for i in range(self.numCodes):
-            for j in range(i+1, self.numCodes):
-                self.F[i][j] = self.calculateCostFunction(i, j)
+        for i in range(self.numCodes):  # Selection of the code i
+            for j in range(i + 1, self.numCodes):  # Selection of the code j to compare
+                f = 0
+                for k in range(self.numElementsCodes):
+                    if self.S[i][k] != self.S[j][k]:
+                        f += 1
+
+                self.F[i][j] = f
 
         self.F = self.F + self.F.T - np.diag(np.diag(self.F))
         self.F = self.F.tolist()
-        patata = 0
-        """for i in range(self.numCodes):
-            for j in range(self.numElementsCodes):
-                for k in range(self.numCodes):
-                    k += 1
-                    if i != k:
 
-                        if self.S[i][j] != self.S[k][j]:
-                            self.F[i][k] += 1
-        """
     def getNumCodes(self):
         return self.numCodes
 
