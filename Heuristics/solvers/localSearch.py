@@ -226,3 +226,22 @@ class LocalSearch(_Solver):
             incumbentFitness = neighborFitness
 
         return incumbent
+
+    def LS_2opt(self, path, flips): # Flips is F matrix, path is solution from greedy
+        min_change = 0
+        for i in range(len(path)):
+            for j in range(i+2, len(path) - 1):
+                current_cost = flips[path[i]][path[i+1]] + flips[path[j]][path[j+1]]
+                new_cost = flips[path[i]][path[j]] + flips[path[i+1]][path[j+1]]
+
+                change = new_cost - current_cost
+
+                if change < min_change:
+                    min_change = change
+                    min_i = i
+                    min_j = j
+
+        if min_change < 0:
+            path[min_i + 1 : min_j + 1] = path[min_i + 1 : min_j + 1][::-1] # Change in the path
+
+        return path # This path is the new solution

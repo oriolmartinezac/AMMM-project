@@ -21,12 +21,6 @@ from Heuristics.problem.solution import Solution
 import numpy as np
 
 class Instance(object):
-    def calculateCostFunction(self, i, j):
-        total = 0
-        for i_e in range(self.numElementsCodes):
-            if self.S[i][i_e] != self.S[j][i_e]:
-                total += 1
-        return total
 
     def __init__(self, config, inputData):
         self.config = config
