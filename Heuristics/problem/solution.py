@@ -43,6 +43,9 @@ class Solution(_Solution):
         self.path_followed = []
         super().__init__()
 
+    def getTotalFlips(self):
+        return self.total_flips
+
     def add(self, path, total_flips):
         try:
             self.total_flips = total_flips

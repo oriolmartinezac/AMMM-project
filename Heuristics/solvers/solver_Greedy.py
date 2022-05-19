@@ -90,7 +90,7 @@ class Solver_Greedy(_Solver):
             solution = localSearch.solve(solution=solution, startTime=self.startTime, endTime=endTime)
 
         self.elapsedEvalTime = time.time() - self.startTime
-        self.writeLogLine(solution.getFitness(), 1)
+        self.writeLogLine(solution.getTotalFlips(), 1)
         self.numSolutionsConstructed = 1
         self.printPerformance()
 
