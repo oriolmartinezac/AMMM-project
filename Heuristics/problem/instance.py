@@ -41,7 +41,7 @@ class Instance(object):
 
                 self.F[i][j] = f
 
-        self.F = self.F + self.F.T - np.diag(np.diag(self.F))
+        self.F = self.F + self.F.T
         self.F = self.F.tolist()
 
     def getNumCodes(self):
