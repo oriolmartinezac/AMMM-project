@@ -40,8 +40,8 @@ class Instance(object):
                         f += 1
 
                 self.F[i][j] = f
+                self.F[j][i] = f
 
-        self.F = self.F + self.F.T
         self.F = self.F.tolist()
 
     def getNumCodes(self):
