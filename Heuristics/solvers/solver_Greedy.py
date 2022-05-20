@@ -67,7 +67,9 @@ class Solver_Greedy(_Solver):
             path.append(new_index)
             current = new_index
 
-        solution.add(path, total_flips)
+        solution.setPathFollowed(path)
+        solution.setTotalFlips(total_flips)
+        solution.setFMatrix(costCodes)
 
         return solution
 
@@ -80,7 +82,6 @@ class Solver_Greedy(_Solver):
         localSearch = kwargs.get('localSearch', None)
         if localSearch is not None:
             self.config.localSearch = localSearch
-
         self.writeLogLine(float('inf'), 0)
 
         solution = self.construction()

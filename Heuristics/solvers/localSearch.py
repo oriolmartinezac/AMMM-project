@@ -197,11 +197,6 @@ class LocalSearch(_Solver):
                                     curHighestLoad = neighborHighestLoad
         return bestNeighbor
 
-    def exploreNeighborhood(self, solution):
-        if self.nhStrategy == 'TaskExchange': return self.exploreExchange(solution)
-        elif self.nhStrategy == 'Reassignment': return self.exploreReassignment(solution)
-        else: raise AMMMException('Unsupported NeighborhoodStrategy(%s)' % self.nhStrategy)
-
     def solve(self, **kwargs):
         initialSolution = kwargs.get('solution', None)
         if initialSolution is None:
@@ -212,36 +207,49 @@ class LocalSearch(_Solver):
         endTime = kwargs.get('endTime', None)
 
         incumbent = initialSolution
-        incumbentFitness = incumbent.getFitness()
+        incumbentFlips = incumbent.getTotalFlips()
         iterations = 0
 
         # keep iterating while improvements are found
         while time.time() < endTime:
             iterations += 1
-            neighbor = self.exploreNeighborhood(incumbent)
+
+            # Apply best improving aND FIRST IMPROVING
+            neighbor = self.LS_2opt(incumbent)
             if neighbor is None: break
-            neighborFitness = neighbor.getFitness()
-            if incumbentFitness <= neighborFitness: break
+            neighborFlips = neighbor.getTotalFlips()
+            if incumbentFlips <= neighborFlips: break
             incumbent = neighbor
-            incumbentFitness = neighborFitness
+            incumbentFlips = neighborFlips
 
         return incumbent
 
-    def LS_2opt(self, path, flips): # Flips is F matrix, path is solution from greedy
-        min_change = 0
+    def LS_2opt(self, solution): # Flips is F matrix, path is solution from greedy
+        path = solution.getPathFollowed()
+        result_path = path
+        flips = solution.getFMatrix()
+        current_total_flips = solution.getTotalFlips()
+        changed = False
+
         for i in range(len(path)):
             for j in range(i+2, len(path) - 1):
                 current_cost = flips[path[i]][path[i+1]] + flips[path[j]][path[j+1]]
                 new_cost = flips[path[i]][path[j]] + flips[path[i+1]][path[j+1]]
 
-                change = new_cost - current_cost
-
-                if change < min_change:
-                    min_change = change
+                if new_cost < current_cost:
+                    changed = True
+                    total_cost = current_cost - new_cost
+                    current_total_flips -= total_cost
                     min_i = i
                     min_j = j
+                    result_path[min_i + 1: min_j + 1] = path[min_i + 1: min_j + 1][::-1]  # Change in the path
 
-        if min_change < 0:
-            path[min_i + 1 : min_j + 1] = path[min_i + 1 : min_j + 1][::-1] # Change in the path
+                    if self.policy == 'FirstImprovement':
+                        break
+            if self.policy == 'FirstImprovement' and changed:
+                break
 
-        return path # This path is the new solution
+        solution.setPathFollowed(result_path)
+        solution.setTotalFlips(current_total_flips)
+
+        return solution
