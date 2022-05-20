@@ -28,6 +28,7 @@ from Heuristics.solvers.localSearch import LocalSearch
 class Solver_Greedy(_Solver):
 
     def _selectCandidate(self, candidateList, path):
+        aux_candidate_list = candidateList[:]
         if self.config.solver == 'Greedy':
             max_int = sys.maxsize
             if len(path) == self.instance.getNumCodes():
@@ -35,11 +36,11 @@ class Solver_Greedy(_Solver):
                 min_value = candidateList[0]
             else:
                 for i in path:
-                    candidateList[i] = max_int
+                    aux_candidate_list[i] = max_int
 
-                min_value = min(candidateList)
+                min_value = min(aux_candidate_list)
                 # new_index = sortedCandidateList.index(min_value) + (index+1)
-                new_index = candidateList.index(min_value)
+                new_index = aux_candidate_list.index(min_value)
             return new_index, min_value  # Return position next node
 
         return random.choice(candidateList)
@@ -48,11 +49,8 @@ class Solver_Greedy(_Solver):
         # get an empty solution for the problem
         solution = self.instance.createSolution()
 
-        # get tasks and sort them by their total required resources in descending order
         costCodes = self.instance.getF()
 
-        # TAKE the codes to feasible assignments
-        # select the best candidate
         path = []
         current = 0
         total_flips = 0
@@ -60,7 +58,6 @@ class Solver_Greedy(_Solver):
         path.append(current)
 
         for n in range(self.instance.getNumCodes()):
-
             new_index, value = self._selectCandidate(costCodes[current], path)
 
             total_flips += value
@@ -69,7 +66,6 @@ class Solver_Greedy(_Solver):
 
         solution.setPathFollowed(path)
         solution.setTotalFlips(total_flips)
-        solution.setFMatrix(costCodes)
 
         return solution
 
@@ -91,7 +87,7 @@ class Solver_Greedy(_Solver):
             solution = localSearch.solve(solution=solution, startTime=self.startTime, endTime=endTime)
 
         self.elapsedEvalTime = time.time() - self.startTime
-        self.writeLogLine(solution.getTotalFlips(), 1)
+        self.writeLogLine(solution.getTotalFlips(), solution.getIterations()) #TOTAL_FLIPS AND NUMBER ITERATIONS
         self.numSolutionsConstructed = 1
         self.printPerformance()
 

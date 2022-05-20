@@ -26,7 +26,14 @@ class Solution(_Solution):
         self.F = F
         self.total_flips = 0
         self.path_followed = []
+        self.iterations = 1
         super().__init__()
+
+    def setIterations(self, n):
+        self.iterations = n
+
+    def getIterations(self):
+        return self.iterations
 
     def setFMatrix(self, matrix):
         self.F = matrix

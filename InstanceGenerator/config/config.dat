@@ -4,5 +4,5 @@ fileNamePrefix = example;
 fileNameExtension = dat;
 numInstances = 1;
 
-n = 1000;
-m = 500;
+n = 300;
+m = 250;
