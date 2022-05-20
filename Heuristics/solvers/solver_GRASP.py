@@ -26,20 +26,18 @@ from Heuristics.solvers.localSearch import LocalSearch
 # Inherits from the parent abstract solver.
 class Solver_GRASP(_Solver):
 
-    def _selectCandidate(self, candidateList, alpha):
+    def _selectCandidate(self, candidateList, alpha): # COMPLETED !!
 
-        # sort candidate assignments by highestLoad in ascending order
-        sortedCandidateList = sorted(candidateList, key=lambda x: x.highestLoad)
-        
-        # compute boundary highest load as a function of the minimum and maximum highest loads and the alpha parameter
-        minHLoad = sortedCandidateList[0].highestLoad
-        maxHLoad = sortedCandidateList[-1].highestLoad
-        boundaryHLoad = minHLoad + (maxHLoad - minHLoad) * alpha
+        sortedCandidateList = sorted(candidateList) # Order the elements
+
+        minF = sortedCandidateList[0]
+        maxF = sortedCandidateList[-1]
+        boundaryF = minF + (maxF - minF) * alpha
         
         # find elements that fall into the RCL
         maxIndex = 0
         for candidate in sortedCandidateList:
-            if candidate.highestLoad <= boundaryHLoad:
+            if candidate <= boundaryF:
                 maxIndex += 1
 
         # create RCL and pick an element randomly
@@ -47,7 +45,7 @@ class Solver_GRASP(_Solver):
         if not rcl: return None
         return random.choice(rcl)          # pick a candidate from rcl at random
     
-    def _greedyRandomizedConstruction(self, alpha):
+    def _greedyRandomizedConstruction(self, alpha): #TODO: function
         # get an empty solution for the problem
         solution = self.instance.createSolution()
         
@@ -76,16 +74,16 @@ class Solver_GRASP(_Solver):
             
         return solution
     
-    def stopCriteria(self):
+    def stopCriteria(self): #TODO: function
         self.elapsedEvalTime = time.time() - self.startTime
         return time.time() - self.startTime > self.config.maxExecTime
 
-    def solve(self, **kwargs):
+    def solve(self, **kwargs): #TODO: function
         self.startTimeMeasure()
         incumbent = self.instance.createSolution()
         incumbent.makeInfeasible()
-        bestHighestLoad = incumbent.getFitness()
-        self.writeLogLine(bestHighestLoad, 0)
+        bestTotalFlips = incumbent.getTotalFlips()
+        self.writeLogLine(bestTotalFlips, 0)
 
         iteration = 0
         while not self.stopCriteria():
@@ -102,12 +100,12 @@ class Solver_GRASP(_Solver):
 
             if solution.isFeasible():
                 solutionHighestLoad = solution.getFitness()
-                if solutionHighestLoad < bestHighestLoad :
+                if solutionHighestLoad < bestTotalFlips :
                     incumbent = solution
-                    bestHighestLoad = solutionHighestLoad
-                    self.writeLogLine(bestHighestLoad, iteration)
+                    bestTotalFlips = solutionHighestLoad
+                    self.writeLogLine(bestTotalFlips, iteration)
 
-        self.writeLogLine(bestHighestLoad, iteration)
+        self.writeLogLine(bestTotalFlips, iteration)
         self.numSolutionsConstructed = iteration
         self.printPerformance()
         return incumbent
