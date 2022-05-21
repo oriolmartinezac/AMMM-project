@@ -28,8 +28,8 @@ from Heuristics.solvers.localSearch import LocalSearch
 class Solver_Greedy(_Solver):
 
     def _selectCandidate(self, candidateList, path):
-        aux_candidate_list = candidateList[:]
         if self.config.solver == 'Greedy':
+            aux_candidate_list = candidateList[:]
             max_int = sys.maxsize
             if len(path) == self.instance.getNumCodes():
                 new_index = 0
@@ -39,11 +39,20 @@ class Solver_Greedy(_Solver):
                     aux_candidate_list[i] = max_int
 
                 min_value = min(aux_candidate_list)
-                # new_index = sortedCandidateList.index(min_value) + (index+1)
                 new_index = aux_candidate_list.index(min_value)
-            return new_index, min_value  # Return position next node
+            return new_index, min_value
 
-        return random.choice(candidateList)
+        # RANDOM selection
+        new_index = 0
+        min_value = candidateList[0]
+        if len(path) != self.instance.getNumCodes():
+            while True:
+                choice = random.choice(candidateList)
+                if choice not in path:
+                    min_value = choice
+                    new_index = candidateList.index(min_value)
+                    break
+        return new_index, min_value
 
     def construction(self):
         # get an empty solution for the problem

@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import random
+import sys
 import time
 from Heuristics.solver import _Solver
 from Heuristics.solvers.localSearch import LocalSearch
@@ -26,69 +27,76 @@ from Heuristics.solvers.localSearch import LocalSearch
 # Inherits from the parent abstract solver.
 class Solver_GRASP(_Solver):
 
-    def _selectCandidate(self, candidateList, alpha): # COMPLETED !!
+    def _selectCandidate(self, candidateList, alpha, path):  # COMPLETED !!
+        aux_candidate_list = candidateList[:]
+        max_int = sys.maxsize
 
-        sortedCandidateList = sorted(candidateList) # Order the elements
+        if len(path) == self.instance.getNumCodes():
+            new_index = 0
+            selection = candidateList[0]
+        else:
+            for i in path:
+                aux_candidate_list[i] = max_int
 
-        minF = sortedCandidateList[0]
-        maxF = sortedCandidateList[-1]
-        boundaryF = minF + (maxF - minF) * alpha
-        
-        # find elements that fall into the RCL
-        maxIndex = 0
-        for candidate in sortedCandidateList:
-            if candidate <= boundaryF:
-                maxIndex += 1
+            sortedCandidateList = sorted(aux_candidate_list)  # Order the elements
 
-        # create RCL and pick an element randomly
-        rcl = sortedCandidateList[0:maxIndex]          # pick first maxIndex elements starting from element 0
-        if not rcl: return None
-        return random.choice(rcl)          # pick a candidate from rcl at random
-    
-    def _greedyRandomizedConstruction(self, alpha): #TODO: function
+            minF = sortedCandidateList[0]
+            window = (len(path)+1)*-1
+            maxF = sortedCandidateList[window]
+            boundaryF = minF + (maxF - minF) * alpha
+
+            # find elements that fall into the RCL
+            maxIndex = 0
+            for candidate in sortedCandidateList:
+                if candidate <= boundaryF:
+                    maxIndex += 1
+
+            # create RCL and pick an element randomly
+            rcl = sortedCandidateList[0:maxIndex]  # pick first maxIndex elements starting from element 0
+            if not rcl:
+                return None
+
+            selection = random.choice(rcl)
+            new_index = aux_candidate_list.index(selection)
+        return new_index, selection  # pick a candidate from rcl at random
+
+    def _greedyRandomizedConstruction(self, alpha):
         # get an empty solution for the problem
         solution = self.instance.createSolution()
-        
-        # get tasks and sort them by their total required resources in descending order
-        tasks = self.instance.getTasks()
-        sortedTasks = sorted(tasks, key=lambda t: t.getTotalResources(), reverse=True)
+        costCodes = self.instance.getF()
 
+        path = []
+        current = 0
+        total_flips = 0
 
-        # for each task taken in sorted order
-        for task in sortedTasks:
-            taskId = task.getId()
-            
-            # compute feasible assignments
-            candidateList = solution.findFeasibleAssignments(taskId)
+        path.append(current)
 
-            # no candidate assignments => no feasible assignment found
-            if not candidateList:
-                solution.makeInfeasible()
-                break
-            
-            # select an assignment
-            candidate = self._selectCandidate(candidateList, alpha)
+        for n in range(self.instance.getNumCodes()):
+            new_index, value = self._selectCandidate(costCodes[current], alpha, path)
 
-            # assign the current task to the CPU that resulted in a minimum highest load
-            solution.assign(taskId, candidate.cpuId)
-            
+            total_flips += value
+            path.append(new_index)
+            current = new_index
+
+        solution.setPathFollowed(path)
+        solution.setTotalFlips(total_flips)
+
         return solution
-    
-    def stopCriteria(self): #TODO: function
+
+    def stopCriteria(self):  # TODO: function
         self.elapsedEvalTime = time.time() - self.startTime
         return time.time() - self.startTime > self.config.maxExecTime
 
-    def solve(self, **kwargs): #TODO: function
+    def solve(self, **kwargs):  # TODO: function
         self.startTimeMeasure()
         incumbent = self.instance.createSolution()
-        incumbent.makeInfeasible()
-        bestTotalFlips = incumbent.getTotalFlips()
-        self.writeLogLine(bestTotalFlips, 0)
+        bestTotalFlips = sys.maxsize
+        #self.writeLogLine(bestTotalFlips, 0)
 
         iteration = 0
         while not self.stopCriteria():
             iteration += 1
-            
+
             # force first iteration as a Greedy execution (alpha == 0)
             alpha = 0 if iteration == 1 else self.config.alpha
 
@@ -98,15 +106,14 @@ class Solver_GRASP(_Solver):
                 endTime = self.startTime + self.config.maxExecTime
                 solution = localSearch.solve(solution=solution, startTime=self.startTime, endTime=endTime)
 
-            if solution.isFeasible():
-                solutionHighestLoad = solution.getFitness()
-                if solutionHighestLoad < bestTotalFlips :
-                    incumbent = solution
-                    bestTotalFlips = solutionHighestLoad
-                    self.writeLogLine(bestTotalFlips, iteration)
+            solutionTotalFlips = solution.getTotalFlips()
+            if solutionTotalFlips < bestTotalFlips:
+                incumbent = solution
+                bestTotalFlips = solutionTotalFlips
+                self.writeLogLine(bestTotalFlips, iteration)
 
-        self.writeLogLine(bestTotalFlips, iteration)
+        solution.setIterations(iteration)
+        self.writeLogLine(solution.getTotalFlips(), iteration)  # TOTAL_FLIPS AND NUMBER ITERATIONS
         self.numSolutionsConstructed = iteration
         self.printPerformance()
         return incumbent
-
