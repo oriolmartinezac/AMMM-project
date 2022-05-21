@@ -83,11 +83,11 @@ class Solver_GRASP(_Solver):
 
         return solution
 
-    def stopCriteria(self):  # TODO: function
+    def stopCriteria(self):
         self.elapsedEvalTime = time.time() - self.startTime
         return time.time() - self.startTime > self.config.maxExecTime
 
-    def solve(self, **kwargs):  # TODO: function
+    def solve(self, **kwargs):
         self.startTimeMeasure()
         incumbent = self.instance.createSolution()
         bestTotalFlips = sys.maxsize
@@ -112,7 +112,8 @@ class Solver_GRASP(_Solver):
                 bestTotalFlips = solutionTotalFlips
                 self.writeLogLine(bestTotalFlips, iteration)
 
-        solution.setIterations(iteration)
+        incumbent.setIterations(iteration)
+
         self.writeLogLine(solution.getTotalFlips(), iteration)  # TOTAL_FLIPS AND NUMBER ITERATIONS
         self.numSolutionsConstructed = iteration
         self.printPerformance()
