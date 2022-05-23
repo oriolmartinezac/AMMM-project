@@ -71,8 +71,8 @@ class LocalSearch(_Solver):
         current_total_flips = solution.getTotalFlips()
         changed = False
 
-        for i in range(len(path)):
-            for j in range(i+2, len(path) - 1):
+        for i in range(len(path)): # CHECK IF IT IS GETTING OUT OF INDEX
+            for j in range(i+2, len(path) - 1): # CHECK IF IT IS GETTING OUT OF INDEX
                 current_cost = flips[path[i]][path[i+1]] + flips[path[j]][path[j+1]]
                 new_cost = flips[path[i]][path[j]] + flips[path[i+1]][path[j+1]]
 

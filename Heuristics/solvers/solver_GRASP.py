@@ -54,7 +54,7 @@ class Solver_GRASP(_Solver):
             # create RCL and pick an element randomly
             rcl = sortedCandidateList[0:maxIndex]  # pick first maxIndex elements starting from element 0
             if not rcl:
-                return None
+                return None, None
 
             selection = random.choice(rcl)
             new_index = aux_candidate_list.index(selection)
@@ -92,6 +92,8 @@ class Solver_GRASP(_Solver):
         incumbent = self.instance.createSolution()
         bestTotalFlips = sys.maxsize
         #self.writeLogLine(bestTotalFlips, 0)
+        bestGraspFlips = sys.maxsize
+        times = time.time()
 
         iteration = 0
         while not self.stopCriteria():
@@ -107,6 +109,9 @@ class Solver_GRASP(_Solver):
                 solution = localSearch.solve(solution=solution, startTime=self.startTime, endTime=endTime)
 
             solutionTotalFlips = solution.getTotalFlips()
+            if solutionTotalFlips < bestGraspFlips:
+                bestGraspTime = time.time()
+                bestGraspFlips = solutionTotalFlips
             if solutionTotalFlips < bestTotalFlips:
                 incumbent = solution
                 bestTotalFlips = solutionTotalFlips
@@ -114,7 +119,8 @@ class Solver_GRASP(_Solver):
 
         incumbent.setIterations(iteration)
 
-        self.writeLogLine(solution.getTotalFlips(), iteration)  # TOTAL_FLIPS AND NUMBER ITERATIONS
+        self.writeLogLine(bestGraspFlips, iteration)  # TOTAL_FLIPS AND NUMBER ITERATIONS
+        print("Time of finding the best GRASP "+str(bestGraspTime-times))
         self.numSolutionsConstructed = iteration
         self.printPerformance()
         return incumbent
