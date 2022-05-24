@@ -79,7 +79,6 @@ class LocalSearch(_Solver):
                 if new_cost < current_cost:
                     changed = True
                     total_cost = current_cost - new_cost
-                    current_total_flips -= total_cost
                     min_i = i
                     min_j = j
                     result_path[min_i + 1: min_j + 1] = path[min_i + 1: min_j + 1][::-1]  # Change in the path
@@ -90,6 +89,11 @@ class LocalSearch(_Solver):
                 break
 
         solution.setPathFollowed(result_path)
+        current_total_flips = 0
+        for i in range(len(result_path)):
+            if i == len(result_path)-1:
+                break
+            current_total_flips += flips[result_path[i]][result_path[i+1]]
         solution.setTotalFlips(current_total_flips)
 
         return solution
