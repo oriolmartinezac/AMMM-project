@@ -1,0 +1,21 @@
+
+Clone the project in the desired directory. THe link is:
+
+https://github.com/oriolmartinezac/AMMM-project
+
+INSTRUCTIONS CPLEX
+- Import the project in CPLEX: File -> Import existing OPL projects -> Select root directory
+- Select the directory named Cplex from the main folder
+- For executing the instances change the n in the file name of the data variable in the 12 line of the main.mod file
+- All instances have the same name structure nXX_m500.dat, where XX is the value of n.
+
+INSTRUCTIONS HEURISTICS AND INSTANCE GENERATOR
+- Open the cloned folder on a python IDE, preferably pyCharm
+- Create the run configurations for the Main.py of the Heuristics folder and for the Main.py of the InstanceGenerator folder.
+- The instances are generated modifying the config file in the config folder of the InstanceGenerator folder and executing the run configuration assigned to the InstanceGenerator.
+  These new instances will be generated in the folder "output" with fileNamePrefix set in config.dat.
+
+- To execute an instance, change the configuration on the config file in the config folder of the Heuristics folder and then run the run configuration of the main in heuristics, the instances to execute must be in the data folder:
+               -> The file name of the instance is at "inputDataFile" and has the same structure as the CPLEX instances (in fact they are the same instances).
+               -> The algorithm type and its parameters are in the same config file, in "solver", and can be tuned as desired.
+               -> The solution of the heuristic algorithm is set by "solutionFile" in config file.
