@@ -52,3 +52,6 @@ class ValidateConfig(object):
         m = data.m
         if not isinstance(m, int) or (m <= 0):
             raise AMMMException('m(%s), length of the codes, has to be a positive integer value.' % str(m))
+
+        if pow(2, m) < n:
+            raise AMMMException('m to small to generate codes.')
